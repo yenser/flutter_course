@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/question.dart';
 import 'package:flutter_course/answer.dart';
+import 'package:flutter_course/quiz.dart';
+import 'package:flutter_course/result.dart';
 
 // void main() {
 //   runApp(const MyApp());
@@ -17,25 +19,39 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _questionIndex = 0;
+  int _totalScore = 0;
   static const questions = [
     {
       'questionText': 'What\'s your favorite color?',
-      'answers': ['Black', 'Red', 'Green', 'White']
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 5},
+        {'text': 'Green', 'score': 7},
+        {'text': 'White', 'score': 4}
+      ]
     },
     {
       'questionText': 'What\'s your favorite animal?',
-      'answers': ['Rabbit', 'Snake', 'Elephant', 'Lion']
+      'answers': [
+        {'text': 'Rabbit', 'score': 2},
+        {'text': 'Snake', 'score': 8},
+        {'text': 'Elephant', 'score': 5},
+        {'text': 'Lion', 'score': 10}
+      ]
     }
   ];
 
-  void _answerQuestion() {
+  void _answerQuestion(int score) {
+    _totalScore += score;
     setState(() {
-      if (_questionIndex != questions.length - 1) {
-        _questionIndex++;
-      } else {
-        _questionIndex = 0;
-      }
-      print(_questionIndex);
+      _questionIndex++;
+    });
+    print(_questionIndex);
+  }
+
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
     });
   }
 
@@ -44,19 +60,15 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Flutter Course'),
-        ),
-        body: Column(
-          children: [
-            Question(questions[_questionIndex]['questionText'] as String),
-            ...(questions[_questionIndex]['answers'] as List<String>)
-                .map((answer) {
-              return Answer(_answerQuestion, answer);
-            })
-          ],
-        ),
-      ),
+          appBar: AppBar(
+            title: const Text('Flutter Course'),
+          ),
+          body: _questionIndex < questions.length
+              ? Quiz(
+                  questions: questions,
+                  answerQuestion: _answerQuestion,
+                  questionIndex: _questionIndex)
+              : Result(_totalScore, _resetQuiz)),
     );
   }
 }
