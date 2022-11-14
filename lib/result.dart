@@ -29,7 +29,7 @@ class Result extends StatelessWidget {
         style: const TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
       ),
-      ElevatedButton(onPressed: resetQuiz, child: Text('Reset Quiz'))
+      ElevatedButton(onPressed: resetQuiz, child: const Text('Reset Quiz'))
     ]));
   }
 }
